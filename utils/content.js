@@ -83,47 +83,40 @@ const en = {
 const pt_instructions = (
   <>
     <p>
-      Todos os jogadores que entrarem antes do início da partida, receberão seus
-      números do bingo. Essa sequência de números é gerada aleatoriamente e é
-      única entre os jogadores da partida.
+      Alle spillere, der deltager før spillets start, modtager deres bingo tal. Denne sekvens af tal er tilfældigt genereret og er unik blandt spillerne i kampen.
     </p>
     <p>
-      As bolas sorteadas aparecerão na tela do host. Na tela da jogadora serão
-      exibidas as últimas 5 bolas sorteadas.
+      De trukne bolde vises på værtens skærm. På spillerens skærm vil være. De sidste 5 udtrukne kugler vises.
     </p>
     <p>
-      Na tela da jogadora, ao clicar no número, ele será destacado
-      independentemente das bolas sorteadas.
+      Når du klikker på tallet på spillerens skærm, vil det blive fremhævet uanset de trukket kugler.
     </p>
     <p>
-      Ao clicar no botão bingo!, os números serão validados. Caso seja falso, a
-      jogadora leva uma penalidade. Com três penalidades, a jogadora é eliminada
-      da partida. Caso ocorra o bingo ocorra, a partida se encerra e a vencedora
-      é exibida na tela de todos participantes.
+      Ved at klikke på bingo!-knappen vil tallene blive valideret. Hvis det er falsk, vil spiller tager en straf. Med tre straffe er spilleren elimineret af afgang. Hvis bingo opstår, slutter spillet og vinderen vises på alle deltageres skærm.
     </p>
   </>
 );
 
 const pt = {
   home: {
-    btn1: "Entrar na sala",
-    btn2: "Criar sala",
+    btn1: "Gå ind i spillet",
+    btn2: "Lav nyt spil",
   },
   createRoom: {
     createRoom: {
-      title: "Criar Sala",
-      label1: "NOME DA SALA: ",
-      label2: "QUANTIDADE DE BOLAS: (50 - 99)",
-      warning: "Sala indisponível, tente outro nome.",
-      btn: "Entrar",
+      title: "Lav nyt spil",
+      label1: "Spillets navn: ",
+      label2: "Antal bolde: (50 - 99)",
+      warning: "Spillet er ikke tilgængeligt - prøv et andet.",
+      btn: "Log ind",
     },
     waitRoom: {
-      title: "ID DA SALA: ",
-      subtitle: "Quantidade de bolas: ",
-      btn: "Iniciar",
-      title2: "Aguardando jogadores... ",
-      subtitle2: "entrou!",
-      title3: "Instruções",
+      title: "Spillets navn: ",
+      subtitle: "Antal bolde: ",
+      btn: "Start",
+      title2: "Venter på spillere... ",
+      subtitle2: "Kom ind!",
+      title3: "Instruktioner",
       instructions: pt_instructions,
     },
     playRoom: {
@@ -136,29 +129,29 @@ const pt = {
   },
   joinRoom: {
     joinRoom: {
-      title: "Entrar na Sala",
-      label1: "SEU NOME: ",
-      label2: "ID DA SALA: ",
-      btn: "Entrar",
+      title: "Gå ind i spillet",
+      label1: "Dit navn: ",
+      label2: "spillets navn: ",
+      btn: "Log ind",
     },
     waitRoom: {
-      title: "Aguardando início do jogo ",
-      subtitle: "Seus números sorteados:  ",
-      subtitle2: "Gerando cartela",
-      subtitle3: "entrou!",
-      title2: "Instruções",
-      title3: "Aguardando jogadores...",
+      title: "Venter på at spil starter",
+      subtitle: "Dine udtrukne tal:  ",
+      subtitle2: "Generer kort",
+      subtitle3: "Log ind!",
+      title2: "Instruktioner",
+      title3: "Venter på spillere...",
       instructions: pt_instructions,
     },
     playRoom: {
-      title: "JOGO INICIALIZADO",
+      title: "Spillet er startet",
       btn: "BINGO!",
       bingoDisplay: {
-        title: "Os últimos 5 números sorteados:",
+        title: "De sidste 5 udtrukne tal:",
       },
     },
     bingo: {
-      title: "venceu!",
+      title: "Du vandt!",
     },
   },
 };

@@ -26,14 +26,14 @@ export default function JoinForm(props) {
             className={`${styles.btn_enter} ${styles.bgc_green}`}
             onClick={() => props.btnFunction(props.room, name2)}
           >
-            Entrar
+            Log ind
           </button>
         </>
       );
     case "home":
       return (
         <>
-          <label className={styles.label}>Id da Sala</label>
+          <label className={styles.label}>Spillets navn</label>
           <input
             autoComplete="off"
             className={styles.input}
@@ -42,7 +42,7 @@ export default function JoinForm(props) {
             name="room"
             type="text"
           ></input>
-          <label className={styles.label}>Seu nome</label>
+          <label className={styles.label}>Dit navn</label>
           <input
             autoComplete="off"
             className={styles.input}
@@ -55,21 +55,21 @@ export default function JoinForm(props) {
             className={`${styles.btn_enter} ${styles.bgc_green}`}
             onClick={() => props.btnFunction(room, name2, "join")}
           >
-            Entrar
+            Log ind
           </button>
           <span className={styles.division}> ............. </span>
           <button
             className={`${styles.btn_enter} ${styles.bgc_dark_blue}`}
             onClick={() => props.btnFunction(room, name2, "create")}
           >
-            Criar Sala
+            Opret spil
           </button>
         </>
       );
     case "host":
       return (
         <>
-          <label className={styles.label}>Id da Sala</label>
+          <label className={styles.label}>Spillets navn</label>
           <input
             autoComplete="off"
             className={styles.input}
@@ -78,8 +78,8 @@ export default function JoinForm(props) {
             name="room"
             type="text"
           ></input>
-          {props.roomAvailability && <p> sala ocupada </p>}
-          <label className={styles.label}>Quantidade de bolas</label>
+          {props.roomAvailability && <p> Spil er optaget </p>}
+          <label className={styles.label}>Antal bolde</label>
           <input
             className={styles.input}
             value={qtdBalls}
@@ -89,7 +89,7 @@ export default function JoinForm(props) {
             max={99}
             type="number"
           ></input>
-          <label>Escolha opção: </label>
+          <label>Valgmuligheder: </label>
           <select
             name="cars"
             id="cars"

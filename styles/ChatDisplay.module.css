@@ -3,7 +3,7 @@
     background-color: #E5E5E5;
     position: absolute;
     background-color: #e5e5e5;
-    background-image: url("/dimension.png");
+    /* background-image: url("/dimension.png"); */
     min-height: 100vh;
     max-height: 100vh;    
 }
