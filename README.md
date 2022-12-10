@@ -42,3 +42,13 @@ flowchart TB
   pd --> dw
   
 ```
+
+
+Draw with text
+https://codepen.io/tholman/pen/DByKvO
+
+SVG Stroke recorder
+https://codepen.io/osublake/pen/Bzamom
+
+This will be implemented
+https://codepen.io/goker/pen/nRWbzV

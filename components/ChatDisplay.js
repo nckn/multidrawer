@@ -95,18 +95,24 @@ export default function ChatDisplay(props) {
   };
 
   return (
-    <>
+    <div className="some-wrapper">
+
+      <div className={styles.drawCanvasWrapper}>
+        <canvas id="canvas"></canvas>
+        <div id="go">[ CLICK/TAP TO DRAW ]</div>
+      </div>
+
       {props.onGame == true && (
-        <>
+        <div className="some-child-wrapper">
           <ChatNav
             openChat={() => setOpenChat((prev) => !prev)}
             newMsg={props.content.length - oldChat}
             option={openChat ? "close" : "open"}
           />
           {test(openChat)}
-        </>
+        </div>
       )}
       {!props.onGame && <>{test(true)}</>}
-    </>
+    </div>
   );
 }
