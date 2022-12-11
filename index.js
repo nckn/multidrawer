@@ -13,13 +13,14 @@ function onConnection(socket) {
   socket.join("nielsroom")
 
   socket.on('drawing', (data) => {
-    console.log('drawing')
-    console.log(socket.rooms)
+    // console.log('drawing')
+    // console.log(socket.rooms)
     socket.broadcast.emit('drawing', data)
   });
 
   socket.on('setdrawer', (data) => {
     console.log('setdrawer')
+    console.log(data)
     socket.broadcast.emit('setdrawer', data)
   })
 

@@ -61,10 +61,6 @@
   socket.on('start', (data) => {
     console.log('start')
     console.log(data)
-
-    socket.join("nielsroom")
-    console.log('- - - - - on connection - - - - - -')
-    console.log(socket.rooms)
   });
 
   window.addEventListener('resize', onResize, false);
@@ -81,6 +77,8 @@
   const setFirstdrawer = () => {
     console.log('socket - - - - - ')
     console.log(socket)
+    console.log('socket id - - - - - ')
+    console.log(socket.id)
     
     //this is an ES6 Set of all client ids in the room
     const room = socket.rooms;
@@ -92,6 +90,14 @@
   }
 
   function drawLine(x0, y0, x1, y1, color, emit){
+    console.log(socket.id)
+    console.log(String(currentDrawerId.innerHTML))
+
+    // If you are not the current drawer you cant draw
+    // if (String(currentDrawerId.innerHTML) != socket.id) {
+    //   return
+    // }
+
     context.beginPath();
     context.moveTo(x0, y0);
     context.lineTo(x1, y1);
@@ -115,8 +121,11 @@
 
   function onStartButtonClick(e){
     console.log('onStartButtonClick')
+
+    currentDrawerId.innerHTML = socket.id
+
     socket.emit('setdrawer', {
-      player: 'test'
+      player: socket.id
     });
   }
 
@@ -167,7 +176,8 @@
     console.log('receiving')
     console.log(data)
 
-    currentDrawerId.innerHTML = data.currentDrawerId
+    currentDrawerId.innerHTML = data.player
+    // currentDrawerId.innerHTML = data.currentDrawerId
   }
 
   // make the canvas fill its parent
