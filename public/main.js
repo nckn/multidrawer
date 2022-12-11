@@ -3,13 +3,15 @@
 (function() {
 
   const words = [
-    'Airplane', 'Bazooka', 'Circus', 'Dromedary', 'Elephant', 'Flower'
+    'Airplane', 'Bazooka', 'Circus', 'Dromedary', 'Elephant', 'Flower',
+    'Giraffe', 'Halloween', 'Icecream', 'Jail', 'Kangaroo', 'Longboard',
   ]
 
   var socket = io();
   var canvas = document.getElementsByClassName('whiteboard')[0];
   var colors = document.getElementsByClassName('color');
 
+  var wordBoxWrapper = document.getElementById('wordBoxWrapper')
   var startButton = document.getElementById('startButton')
   var currentDrawerId = document.getElementById('currentDrawerId')
   var context = canvas.getContext('2d');
@@ -181,11 +183,30 @@
     drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
   }
   
-  function onSetDrawerEvent(data){
+  async function onSetDrawerEvent(data){
     console.log('receiving')
     console.log(data)
 
     currentDrawerId.innerHTML = data.player
+
+    // Set random wordbox
+    const random = Math.floor(Math.random() * words.length)
+
+    const allWordBoxes = await [...document.getElementsByClassName('word-box')]
+    
+    console.log('allWordBoxes')
+    console.log(allWordBoxes)
+
+    // return
+    
+    allWordBoxes.forEach( (box, index) => {
+      // First remove selected class name
+      box.classList.remove('word-box--selected')
+      // Then add to the random wordbox
+      if (index === random) {
+        box.classList.add('word-box--selected')
+      }
+    })
     // currentDrawerId.innerHTML = data.currentDrawerId
   }
 
@@ -194,5 +215,30 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
+
+  // onClickWordBox
+  function onClickWordBox(word) {
+    console.log('the word is:')
+    console.log(word)
+  }
+
+  function applyWords() {
+    for (let i = 0; i < words.length; i++) {
+      const wordBox = document.createElement('div')
+      const wordBoxText = document.createElement('p')
+      wordBox.classList.add('word-box')
+      wordBoxText.innerHTML = words[ i ]
+      wordBox.appendChild( wordBoxText )
+      wordBoxWrapper.appendChild( wordBox )
+
+      wordBox.addEventListener('click', () => { 
+        console.log('hey')
+        onClickWordBox(words[ i ])
+      }, false)
+      // wordBox.addEventListener('click', onClickWordBox(words[ i ]), false)
+    }
+  }
+
+  applyWords()
 
 })();
