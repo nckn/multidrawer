@@ -4,12 +4,23 @@ import styles from "../styles/ChatDisplay.module.css";
 import ChatNav from "./ChatNav";
 import animations from "../utils/animations";
 import { MdOutlineSend } from "react-icons/md";
+import Drawer from "../utils/drawer";
 
 export default function ChatDisplay(props) {
   const [msg, setMsg] = React.useState("");
   const [openChat, setOpenChat] = React.useState(false);
   const [oldChat, setOldChat] = React.useState(props.content.length);
+  const [drawer, setDrawer] = React.useState('')
+
   const exibLastChat = React.useRef(null);
+
+  React.useEffect(() => {
+    console.log('on init')
+
+    setDrawer( new Drawer() )
+
+    console.log(drawer)
+  }, [])
 
   const handleEnter = (e) => {
     if (e.key == "Enter") {
@@ -98,8 +109,8 @@ export default function ChatDisplay(props) {
     <div className="some-wrapper">
 
       <div className={styles.drawCanvasWrapper}>
-        <canvas id="canvas"></canvas>
-        <div id="go">[ CLICK/TAP TO DRAW ]</div>
+        <canvas id="canvas" className={styles.canvas}></canvas>
+        <div id="go" className={styles.startButton}>[ CLICK/TAP TO DRAW ]</div>
       </div>
 
       {props.onGame == true && (
