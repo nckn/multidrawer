@@ -4,6 +4,7 @@ import styles from "../styles/ChatDisplay.module.css";
 import ChatNav from "./ChatNav";
 import animations from "../utils/animations";
 import { MdOutlineSend } from "react-icons/md";
+
 import Drawer from "../utils/drawer";
 
 export default function ChatDisplay(props) {
@@ -28,6 +29,8 @@ export default function ChatDisplay(props) {
     }
   };
 
+  // btnFunction is a callback function that calls handleChat in parent,
+  // which emits something on the socket
   const sendMsg = () => {
     if (msg != "") {
       props.btnFunction(props.name, msg);
