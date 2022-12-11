@@ -12,6 +12,8 @@ import BingoDisplay from "../components/BingoDisplay";
 import PlayerDisplay from "../components/PlayerDisplay";
 import BingoWinner from "../components/BingoWinner";
 
+import Drawer from "../utils/drawer";
+
 let socket;
 export default function Room() {
   const router = useRouter();
@@ -22,9 +24,15 @@ export default function Room() {
   const [cartela, setCartela] = React.useState([]);
   const [raffleds, setRaffleds] = React.useState([]);
   const [bingoWinner, setBingoWinner] = React.useState("");
+  
+  const [drawer, setDrawer] = React.useState('')
 
   React.useEffect(() => {
     socketInitializer(name);
+
+    setDrawer( new Drawer() )
+
+    console.log(drawer)
   }, [name]);
 
   //set event listeners
@@ -102,59 +110,23 @@ export default function Room() {
   const displayChat = (option) => {
     console.log(option);
     return (
-      <ChatDisplay
-        name={name2}
-        content={chat}
-        btnFunction={handleChat}
-        cartela={cartela}
-        onGame={option == "on-game" ? true : false}
-      />
+      <div className="some-wrapper">
+        <div className={styles.drawCanvasWrapper}>
+          <canvas id="canvas" className={styles.canvas}></canvas>
+          <div id="go" className={styles.startButton}>[ CLICK/TAP TO DRAW ]</div>
+        </div>
+
+        <ChatDisplay
+          name={name2}
+          content={chat}
+          btnFunction={handleChat}
+          cartela={cartela}
+          onGame={option == "on-game" ? true : false}
+        />
+      </div>
     );
   };
 
-  switch (path) {
-    case "wait":
-      return displayChat();
+  return displayChat();
 
-    case "play-room":
-      return (
-        <>
-          {displayChat("on-game")}
-          <section className={styles.main_play}>
-            <p> {name2}</p>
-            <p> 5 ultimos sorteados </p>
-            <BingoDisplay
-              type="player"
-              max={5}
-              numbers={raffleds}
-              title={"sei la"}
-            />
-            <PlayerDisplay numbers={cartela.sort()} />
-            <button className={styles.btn_bingo} onClick={bingo}>
-              Bingo!
-            </button>
-          </section>
-        </>
-      );
-    case "bingo":
-      return (
-        <>
-          {displayChat("on-game")}
-          <BingoWinner winner={bingoWinner} />
-        </>
-      );
-    default:
-      return (
-        <>
-          <section className={styles.main}>
-            <p>
-              Bem-vind@ {name} à sala {room}
-            </p>
-            {name == undefined && (
-              <JoinForm type="room" btnFunction={joinRoom} room={room} />
-            )}
-          </section>
-        </>
-      );
-  }
 }

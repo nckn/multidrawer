@@ -1,7 +1,7 @@
 class Drawer {
   constructor () {
     this.canvas = document.getElementById('canvas')
-    this.context = canvas.getContext('2d')
+    this.context = this.canvas.getContext('2d')
     this.startButton = document.getElementById('go')
 
     // this.canvas.width = document.body.clientWidth

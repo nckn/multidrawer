@@ -11,16 +11,16 @@ export default function ChatDisplay(props) {
   const [msg, setMsg] = React.useState("");
   const [openChat, setOpenChat] = React.useState(false);
   const [oldChat, setOldChat] = React.useState(props.content.length);
-  const [drawer, setDrawer] = React.useState('')
+  // const [drawer, setDrawer] = React.useState('')
 
   const exibLastChat = React.useRef(null);
 
   React.useEffect(() => {
     console.log('on init')
 
-    setDrawer( new Drawer() )
+    // setDrawer( new Drawer() )
 
-    console.log(drawer)
+    // console.log(drawer)
   }, [])
 
   const handleEnter = (e) => {
@@ -109,12 +109,12 @@ export default function ChatDisplay(props) {
   };
 
   return (
-    <div className="some-wrapper">
+    <div className="chat-wrapper">
 
-      <div className={styles.drawCanvasWrapper}>
+      {/* <div className={styles.drawCanvasWrapper}>
         <canvas id="canvas" className={styles.canvas}></canvas>
         <div id="go" className={styles.startButton}>[ CLICK/TAP TO DRAW ]</div>
-      </div>
+      </div> */}
 
       {props.onGame == true && (
         <div className="some-child-wrapper">
