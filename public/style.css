@@ -16,6 +16,17 @@ html, body {
   position: fixed;
 }
 
+#startButton {
+  position: absolute;
+  width: 200px;
+  bottom: 20px;
+  left: calc(50% - 100px);
+  background: blue;
+  color: white;
+  padding: 4px 1rem;
+  border: none;
+}
+
 /**
  * Canvas
  */

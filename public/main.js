@@ -5,6 +5,7 @@
   var socket = io();
   var canvas = document.getElementsByClassName('whiteboard')[0];
   var colors = document.getElementsByClassName('color');
+  var startButton = document.getElementById('startButton');
   var context = canvas.getContext('2d');
 
   var current = {
@@ -22,12 +23,22 @@
   canvas.addEventListener('touchend', onMouseUp, false);
   canvas.addEventListener('touchcancel', onMouseUp, false);
   canvas.addEventListener('touchmove', throttle(onMouseMove, 10), false);
+  
+  startButton.addEventListener('click', onStartButtonClick, false);
 
   for (var i = 0; i < colors.length; i++){
     colors[i].addEventListener('click', onColorUpdate, false);
   }
 
-  socket.on('drawing', onDrawingEvent);
+  socket.on('drawing', data => {
+    console.log('we be drawing')
+    onDrawingEvent(data)
+  });
+  
+  socket.on('setdrawer', (data) => {
+    console.log('we be setting drawer')
+    onSetDrawerEvent(data)
+  });
 
   window.addEventListener('resize', onResize, false);
   onResize();
@@ -52,6 +63,13 @@
       x1: x1 / w,
       y1: y1 / h,
       color: color
+    });
+  }
+
+  function onStartButtonClick(e){
+    console.log('onStartButtonClick')
+    socket.emit('setdrawer', {
+      player: 'test'
     });
   }
 
@@ -94,7 +112,13 @@
   function onDrawingEvent(data){
     var w = canvas.width;
     var h = canvas.height;
+    console.log('drawing')
     drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
+  }
+  
+  function onSetDrawerEvent(data){
+    console.log('receiving')
+    console.log(data)
   }
 
   // make the canvas fill its parent
