@@ -2,10 +2,16 @@
 
 (function() {
 
+  const words = [
+    'Airplane', 'Bazooka', 'Circus', 'Dromedary', 'Elephant', 'Flower'
+  ]
+
   var socket = io();
   var canvas = document.getElementsByClassName('whiteboard')[0];
   var colors = document.getElementsByClassName('color');
-  var startButton = document.getElementById('startButton');
+
+  var startButton = document.getElementById('startButton')
+  var currentDrawerId = document.getElementById('currentDrawerId')
   var context = canvas.getContext('2d');
 
   var current = {
@@ -30,19 +36,60 @@
     colors[i].addEventListener('click', onColorUpdate, false);
   }
 
+  // socket.on("connection", (socket) => {
+  //   socket.join("nielsroom")
+  //   console.log('- - - - - on connection - - - - - -')
+  //   console.log(socket.rooms)
+  // });
+  
   socket.on('drawing', data => {
-    console.log('we be drawing')
+    // console.log('we be drawing')
     onDrawingEvent(data)
   });
   
   socket.on('setdrawer', (data) => {
     console.log('we be setting drawer')
+
+    console.log('socket')
+    console.log(socket)
+    console.log('socket.id')
+    console.log(socket.id)
+
     onSetDrawerEvent(data)
+  });
+  
+  socket.on('start', (data) => {
+    console.log('start')
+    console.log(data)
+
+    socket.join("nielsroom")
+    console.log('- - - - - on connection - - - - - -')
+    console.log(socket.rooms)
   });
 
   window.addEventListener('resize', onResize, false);
   onResize();
 
+  const init = () => {
+    setTimeout(_ => {
+      setFirstdrawer()
+    }, 200)
+  }
+
+  init()
+
+  const setFirstdrawer = () => {
+    console.log('socket - - - - - ')
+    console.log(socket)
+    
+    //this is an ES6 Set of all client ids in the room
+    const room = socket.rooms;
+    // console.log(room)
+    // const clients = io.sockets.adapter.rooms.get('nielsroom');
+    // console.log(clients)
+    // console.log(clients.size)
+
+  }
 
   function drawLine(x0, y0, x1, y1, color, emit){
     context.beginPath();
@@ -119,6 +166,8 @@
   function onSetDrawerEvent(data){
     console.log('receiving')
     console.log(data)
+
+    currentDrawerId.innerHTML = data.currentDrawerId
   }
 
   // make the canvas fill its parent

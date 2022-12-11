@@ -7,9 +7,14 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + '/public'));
 
-function onConnection(socket){
+function onConnection(socket) {
+
+  // Set the room
+  socket.join("nielsroom")
+
   socket.on('drawing', (data) => {
     console.log('drawing')
+    console.log(socket.rooms)
     socket.broadcast.emit('drawing', data)
   });
 
@@ -17,6 +22,12 @@ function onConnection(socket){
     console.log('setdrawer')
     socket.broadcast.emit('setdrawer', data)
   })
+
+  setTimeout(_ => {
+    socket.emit('start', {
+      room: socket.rooms
+    });
+  }, 200)
 }
 
 io.on('connection', onConnection);
