@@ -29,6 +29,15 @@
   canvas.addEventListener('touchend', onMouseUp, false);
   canvas.addEventListener('touchcancel', onMouseUp, false);
   canvas.addEventListener('touchmove', throttle(onMouseMove, 10), false);
+
+  // prevent elastic scrolling
+  document.body.addEventListener(
+    'touchmove',
+    function (e) {
+      e.preventDefault()
+    },
+    false
+  )
   
   startButton.addEventListener('click', onStartButtonClick, false);
 
