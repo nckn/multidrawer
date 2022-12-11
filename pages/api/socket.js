@@ -30,6 +30,7 @@ const SocketHandler = (req, res) => {
               .emit("get-new-player", { name: msg.name, id: msg.id });
           });
 
+          // When emit is received from [room].js for sending a message
           socket.on("send-chat", (msg) => {
             socket
               .in(msg.room)

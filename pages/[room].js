@@ -78,6 +78,7 @@ export default function Room() {
     setPath("wait");
   };
 
+  // Emit to socket
   const handleChat = (name_, msg_) => {
     socket.emit("send-chat", { room: room, name: name_, msg: msg_ });
     setChat((prev) => [...prev, { name: "sent-200", msg: msg_ }]);
