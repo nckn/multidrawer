@@ -32,6 +32,8 @@ export default function Room() {
 
     setDrawer( new Drawer() )
 
+    drawer.
+
     console.log(drawer)
   }, [name]);
 
