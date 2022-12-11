@@ -109,6 +109,7 @@
     float: left;
     width: 100%;
     bottom: 0;
+    z-index: 11;
 }
 
 .input_box {
