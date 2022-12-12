@@ -18,10 +18,18 @@ function onConnection(socket) {
     socket.broadcast.emit('drawing', data)
   });
 
+  // called from onStartButtonClick - when client clicks start button
   socket.on('setdrawer', (data) => {
-    console.log('setdrawer')
-    console.log(data)
+    // console.log('setdrawer')
+    // console.log(data)
     socket.broadcast.emit('setdrawer', data)
+  })
+  
+  // called from onClickWordBox - when client guesses a word
+  socket.on('guessword', (data) => {
+    console.log('guessword - - - - - - -')
+    console.log(data)
+    socket.broadcast.emit('guessword', data)
   })
 
   setTimeout(_ => {

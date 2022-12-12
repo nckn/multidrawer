@@ -19,6 +19,12 @@
   var current = {
     color: 'black'
   };
+  let settings = {
+    strokeWidth: 2,
+    color: current.color
+  }
+  let random = ''
+
   var drawing = false;
 
   canvas.addEventListener('mousedown', onMouseDown, false);
@@ -69,6 +75,15 @@
     onSetDrawerEvent(data)
   });
   
+  socket.on('guessword', (data) => {
+    console.log('a word has been guessed')
+
+    console.log('data')
+    console.log(data)
+
+    onClickWordBoxEvent(data)
+  });
+  
   socket.on('start', (data) => {
     console.log('start')
     console.log(data)
@@ -110,7 +125,7 @@
     context.moveTo(x0, y0);
     context.lineTo(x1, y1);
     context.strokeStyle = color;
-    context.lineWidth = 2;
+    context.lineWidth = settings.strokeWidth;
     context.stroke();
     context.closePath();
 
@@ -139,15 +154,120 @@
     // currentDrawerId.innerHTML = socket.id
 
     // Set random wordbox
-    const random = Math.floor(Math.random() * words.length)
+    random = Math.floor(Math.random() * words.length)
 
     // Set player and word locally
     arrangeForDrawer( {player: socket.id, random: random } )
 
+    // *************************************************
+    // **** emit event - sent from client to server ****
     socket.emit('setdrawer', {
       player: socket.id,
       random: random
     });
+  }
+
+  // onClickWordBox
+  function onClickWordBox(word) {
+    console.log('the word is:')
+    console.log(word)
+
+    // *************************************************
+    // **** emit event - sent from client to server ****
+    socket.emit('guessword', {
+      player: socket.id,
+      word: word
+    });
+  }
+
+  function onDrawingEvent(data){
+    var w = canvas.width;
+    var h = canvas.height;
+    console.log('drawing')
+    drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
+  }
+  
+  function onSetDrawerEvent(data){
+    // console.log('receiving')
+    // console.log(data)
+    
+    // console.log('data')
+    // console.log(data)
+
+    arrangeForDrawer(data, data.random)
+    // currentDrawerId.innerHTML = data.player
+  }
+  
+  function onClickWordBoxEvent(data){
+    console.log('word guess')
+    console.log('data.word')
+    console.log(data.word)
+    console.log('random')
+    console.log(words[random])
+
+    // Check if in fact we have the correct word
+    if (data.word === words[random]) {
+      document.body.style.background = 'red'
+
+      setTimeout(_ => {
+        document.body.style.background = 'white'
+      }, 500)
+      // alert('correct guess')
+    }
+
+    // arrangeForDrawer(data, data.random)
+    // currentDrawerId.innerHTML = data.player
+  }
+
+  function arrangeForDrawer( {player, random}) {
+    // currentDrawerId.innerHTML = data.player
+    currentDrawerId.innerHTML = player
+
+    // Clear the canvas now that a new drawing has to happen
+    context.clearRect(0, 0, canvas.width, canvas.height)
+
+    const allWordBoxes = [...document.getElementsByClassName('word-box')]
+    
+    console.log('allWordBoxes')
+    console.log(allWordBoxes)
+
+    // return
+    
+    allWordBoxes.forEach( (box, index) => {
+      // First remove selected class name
+      box.classList.remove('word-box--selected')
+      // Then add to the random wordbox
+      // If you are not the current drawer you cant draw
+      if (String(currentDrawerId.innerHTML) == socket.id) {
+        if (index === random) {
+          box.classList.add('word-box--selected')
+        }
+      }
+    })
+  }
+
+  // make the canvas fill its parent
+  function onResize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  } 
+
+  // Setup all words
+  function applyWords() {
+    for (let i = 0; i < words.length; i++) {
+      const wordBox = document.createElement('div')
+      const wordBoxText = document.createElement('p')
+      wordBox.classList.add('word-box')
+      wordBoxText.innerHTML = words[ i ]
+      wordBox.appendChild( wordBoxText )
+      wordBoxWrapper.appendChild( wordBox )
+
+      wordBox.addEventListener('click', () => { 
+        console.log('hey')
+        onClickWordBox(words[ i ])
+      }, false)
+      // wordBox.addEventListener('click', onClickWordBox(words[ i ]), false)
+    }
   }
 
   function onMouseDown(e){
@@ -195,71 +315,7 @@
     };
   }
 
-  function onDrawingEvent(data){
-    var w = canvas.width;
-    var h = canvas.height;
-    console.log('drawing')
-    drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
-  }
-  
-  function onSetDrawerEvent(data){
-    console.log('receiving')
-    console.log(data)
-
-    arrangeForDrawer(data, data.random)
-    // currentDrawerId.innerHTML = data.player
-  }
-
-  function arrangeForDrawer( {player, random}) {
-    // currentDrawerId.innerHTML = data.player
-    currentDrawerId.innerHTML = player
-
-    const allWordBoxes = [...document.getElementsByClassName('word-box')]
-    
-    console.log('allWordBoxes')
-    console.log(allWordBoxes)
-
-    // return
-    
-    allWordBoxes.forEach( (box, index) => {
-      // First remove selected class name
-      box.classList.remove('word-box--selected')
-      // Then add to the random wordbox
-      if (index === random) {
-        box.classList.add('word-box--selected')
-      }
-    })
-  }
-
-  // make the canvas fill its parent
-  function onResize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  // onClickWordBox
-  function onClickWordBox(word) {
-    console.log('the word is:')
-    console.log(word)
-  }
-
-  function applyWords() {
-    for (let i = 0; i < words.length; i++) {
-      const wordBox = document.createElement('div')
-      const wordBoxText = document.createElement('p')
-      wordBox.classList.add('word-box')
-      wordBoxText.innerHTML = words[ i ]
-      wordBox.appendChild( wordBoxText )
-      wordBoxWrapper.appendChild( wordBox )
-
-      wordBox.addEventListener('click', () => { 
-        console.log('hey')
-        onClickWordBox(words[ i ])
-      }, false)
-      // wordBox.addEventListener('click', onClickWordBox(words[ i ]), false)
-    }
-  }
-
+  // Now apply words
   applyWords()
 
 })();
