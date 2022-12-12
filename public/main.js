@@ -14,6 +14,8 @@
   var wordBoxWrapper = document.getElementById('wordBoxWrapper')
   var startButton = document.getElementById('startButton')
   var currentDrawerId = document.getElementById('currentDrawerId')
+  var currentWord = document.getElementById('currentWord')
+
   var context = canvas.getContext('2d');
 
   var current = {
@@ -24,6 +26,8 @@
     color: current.color
   }
   let random = ''
+  let theWord = ''
+  let theCurrentDrawerID = ''
 
   var drawing = false;
 
@@ -53,6 +57,17 @@
     colors[i].addEventListener('click', onColorUpdate, false);
   }
 
+  // Look for when don content is loaded
+  // window.addEventListener('DOMContentLoaded', (event) => {
+  //   console.log('DOM fully loaded and parsed');
+
+  //   weAreLoaded()
+  // })
+  socket.emit('anotheronejoins', {
+    // socket.id
+    username: Math.random().toFixed(4)
+  });
+
   // socket.on("connection", (socket) => {
   //   socket.join("nielsroom")
   //   console.log('- - - - - on connection - - - - - -')
@@ -64,6 +79,7 @@
     onDrawingEvent(data)
   });
   
+  // When receiving back from server
   socket.on('setdrawer', (data) => {
     console.log('we be setting drawer')
 
@@ -72,9 +88,12 @@
     console.log('socket.id')
     console.log(socket.id)
 
+    theWord = socket.word
+
     onSetDrawerEvent(data)
   });
   
+  // When receiving back from server
   socket.on('guessword', (data) => {
     console.log('a word has been guessed')
 
@@ -82,6 +101,24 @@
     console.log(data)
 
     onClickWordBoxEvent(data)
+  });
+  
+
+  // Whenever the server emits 'user joined', log it in the chat body
+  socket.on('user joined', (data) => {
+    console.log('user joined')
+    console.log(data)
+    // log(`${data.username} joined`);
+    // addParticipantsMessage(data);
+  });
+
+  // Whenever the server emits 'user left', log it in the chat body
+  socket.on('user left', (data) => {
+    console.log('user left')
+    console.log(data)
+    // log(`${data.username} left`);
+    // addParticipantsMessage(data);
+    // removeChatTyping(data);
   });
   
   socket.on('start', (data) => {
@@ -156,14 +193,17 @@
     // Set random wordbox
     random = Math.floor(Math.random() * words.length)
 
+    theWord = words[ random ]
+
     // Set player and word locally
-    arrangeForDrawer( {player: socket.id, random: random } )
+    arrangeForDrawer( {player: socket.id, random: random, word: words[ random ] } )
 
     // *************************************************
     // **** emit event - sent from client to server ****
     socket.emit('setdrawer', {
-      player: socket.id,
-      random: random
+      player: theCurrentDrawerID === '' ? socket.id : theCurrentDrawerID,
+      random: random,
+      word: words[ random ]
     });
   }
 
@@ -202,16 +242,24 @@
     console.log('word guess')
     console.log('data.word')
     console.log(data.word)
-    console.log('random')
-    console.log(words[random])
+    console.log('theWord')
+    console.log(theWord)
+    // console.log('random')
+    // console.log(words[random])
 
     // Check if in fact we have the correct word
-    if (data.word === words[random]) {
+    // if (data.word === words[random]) {
+    if (data.word === theWord) {
       document.body.style.background = 'red'
+      document.body.classList.add('body--guessed')
 
-      setTimeout(_ => {
-        document.body.style.background = 'white'
-      }, 500)
+      theCurrentDrawerID = data.player
+
+      onStartButtonClick()
+
+      // setTimeout(_ => {
+      //   document.body.style.background = 'white'
+      // }, 500)
       // alert('correct guess')
     }
 
@@ -219,9 +267,10 @@
     // currentDrawerId.innerHTML = data.player
   }
 
-  function arrangeForDrawer( {player, random}) {
+  function arrangeForDrawer( {player, random, word}) {
     // currentDrawerId.innerHTML = data.player
     currentDrawerId.innerHTML = player
+    currentWord.innerHTML = word
 
     // Clear the canvas now that a new drawing has to happen
     context.clearRect(0, 0, canvas.width, canvas.height)
@@ -313,6 +362,34 @@
         callback.apply(null, arguments);
       }
     };
+  }
+
+  async function fetchData(url) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Unable to fetch data:', error);
+    }
+  }
+
+  // async function weAreLoaded() {
+  //   const allNames = await fetchNames('male')
+  //   const randomName = await allNames[Math.floor(Math.random() * allNames.length)]
+  //   console.log('randomName')
+  //   console.log(randomName)
+
+  //   socket.emit('anotheronejoins', {
+  //     // socket.id
+  //     username: Math.random().toFixed(4)
+  //   });
+  // }
+
+  function fetchNames(nameType) {
+    return fetchData(`https://www.randomlists.com/data/names-${nameType}.json`);
   }
 
   // Now apply words

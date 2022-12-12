@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'LexendRegular';
+  src: url('./fonts/LexendDeca-Regular.ttf');
+}
 
 /**
  * Fix user-agent
@@ -14,6 +18,14 @@ html, body {
   padding: 0;
   overflow: hidden;
   position: fixed;
+}
+
+body {
+  font-family: 'LexendRegular', sans-serif;
+}
+
+body * {
+  font-family: 'LexendRegular', sans-serif;
 }
 
 #startButton {
@@ -39,6 +51,8 @@ html, body {
   padding: 20px;
   background: #EFEFEF;
   border-radius: 4px;
+
+  font-size: 10px;
 }
 
 .word-box-wrapper {
@@ -80,6 +94,7 @@ html, body {
 }
 .word-box p {
   user-select: none;
+  margin: 0;
 }
 
 
