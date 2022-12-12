@@ -53,7 +53,13 @@ html, body {
 
   z-index: 12;
   position: absolute;
-  top: 0;
+  top: 64px;
+}
+
+@media screen and (min-width: 768px) {
+  .word-box-wrapper {
+    /* top: 0; */
+  }
 }
 
 .word-box {

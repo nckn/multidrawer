@@ -101,13 +101,10 @@
   }
 
   function drawLine(x0, y0, x1, y1, color, emit){
+    console.log('socket.id')
     console.log(socket.id)
+    console.log('String(currentDrawerId.innerHTML)')
     console.log(String(currentDrawerId.innerHTML))
-
-    // If you are not the current drawer you cant draw
-    // if (String(currentDrawerId.innerHTML) != socket.id) {
-    //   return
-    // }
 
     context.beginPath();
     context.moveTo(x0, y0);
@@ -128,33 +125,55 @@
       y1: y1 / h,
       color: color
     });
+
+    // // If you are not the current drawer you cant draw
+    // if (String(currentDrawerId.innerHTML) == socket.id) {
+    // }
+
   }
 
+  // The start button is clicked
   function onStartButtonClick(e){
     console.log('onStartButtonClick')
 
-    currentDrawerId.innerHTML = socket.id
+    // currentDrawerId.innerHTML = socket.id
+
+    // Set random wordbox
+    const random = Math.floor(Math.random() * words.length)
+
+    // Set player and word locally
+    arrangeForDrawer( {player: socket.id, random: random } )
 
     socket.emit('setdrawer', {
-      player: socket.id
+      player: socket.id,
+      random: random
     });
   }
 
   function onMouseDown(e){
     drawing = true;
-    current.x = e.clientX||e.touches[0].clientX;
-    current.y = e.clientY||e.touches[0].clientY;
+    // If you are not the current drawer you cant draw
+    if (String(currentDrawerId.innerHTML) == socket.id) {
+      current.x = e.clientX||e.touches[0].clientX;
+      current.y = e.clientY||e.touches[0].clientY;
+    }
   }
 
   function onMouseUp(e){
     if (!drawing) { return; }
     drawing = false;
-    drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
+    // If you are not the current drawer you cant draw
+    if (String(currentDrawerId.innerHTML) == socket.id) {
+      drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
+    }
   }
 
   function onMouseMove(e){
     if (!drawing) { return; }
-    drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
+    // If you are not the current drawer you cant draw
+    if (String(currentDrawerId.innerHTML) == socket.id) {
+      drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
+    }
     current.x = e.clientX||e.touches[0].clientX;
     current.y = e.clientY||e.touches[0].clientY;
   }
@@ -183,16 +202,19 @@
     drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
   }
   
-  async function onSetDrawerEvent(data){
+  function onSetDrawerEvent(data){
     console.log('receiving')
     console.log(data)
 
-    currentDrawerId.innerHTML = data.player
+    arrangeForDrawer(data, data.random)
+    // currentDrawerId.innerHTML = data.player
+  }
 
-    // Set random wordbox
-    const random = Math.floor(Math.random() * words.length)
+  function arrangeForDrawer( {player, random}) {
+    // currentDrawerId.innerHTML = data.player
+    currentDrawerId.innerHTML = player
 
-    const allWordBoxes = await [...document.getElementsByClassName('word-box')]
+    const allWordBoxes = [...document.getElementsByClassName('word-box')]
     
     console.log('allWordBoxes')
     console.log(allWordBoxes)
@@ -207,7 +229,6 @@
         box.classList.add('word-box--selected')
       }
     })
-    // currentDrawerId.innerHTML = data.currentDrawerId
   }
 
   // make the canvas fill its parent
