@@ -36,6 +36,9 @@
   let theWord = ''
   let theCurrentDrawerID = ''
 
+  // All users. corresponds to / reflects servers allUsers
+  let allUsers = [];
+
   var drawing = false;
 
   canvas.addEventListener('mousedown', onMouseDown, false);
@@ -73,11 +76,13 @@
   const joinGame = () => {
     // weAreLoaded()
     const randomUserName = Math.random().toFixed(4)
-    createANewPlayer( { username: randomUserName })
+    const randomColor = Math.floor(Math.random()*16777215).toString(16)
+    createANewPlayer( { username: randomUserName, randomColor })
 
     socket.emit('anotheronejoins', {
       // socket.id
-      username: randomUserName
+      username: randomUserName,
+      randomColor
     });
   } 
 
@@ -129,9 +134,27 @@
   });
 
   // Whenever the server emits 'user left', log it in the chat body
+  // Delete the user from allUsers
   socket.on('user left', (data) => {
     console.log('user left')
     console.log(data)
+    
+    console.log('allUsers - before')
+    console.log(allUsers)
+
+    // Delete the user that left
+    allUsers.forEach( (user, index) => {
+      if (data.username === user.username) {
+        removeByAttr(allUsers, 'username', user.username)
+
+        // Delete the DOM in question
+        deleteAssociatedDom( user.username )
+      }
+    })
+
+    console.log('allUsers - after')
+    console.log(allUsers)
+
     // log(`${data.username} left`);
     // addParticipantsMessage(data);
     // removeChatTyping(data);
@@ -153,9 +176,23 @@
 
   init()
 
+  const deleteAssociatedDom = ( username ) => {
+    console.log('deleteAssociatedDom')
+    const allPlayerRows = [...document.getElementsByClassName('player-row')]
+    allPlayerRows.forEach( (row, index) => {
+      const dataName = row.getAttribute('data-name')
+      if (dataName === username) {
+        row.parentNode.removeChild(row)
+      }
+    })
+  }
+
   const createANewPlayer = ( data ) => {
     console.log('createANewPlayer')
     console.log(data)
+
+    // allUsers.push( data.allUsers )
+    allUsers = data.allUsers
 
     const playerRow = document.createElement('div')
     const playerRowTextName = document.createElement('p')
@@ -164,12 +201,21 @@
     playerRow.classList.add('player-row')
     playerRowTextName.classList.add('player-row-text')
     playerRowBar.classList.add('player-row-bar')
+
+    // Add name attribute to playerRow
+    playerRow.setAttribute('data-name', data.username)
     
-    playerRowBar.style.background = `${playerColors[ Math.floor(Math.random() * playerColors.length) ]}`
+    // playerRowBar.style.background = `${playerColors[ Math.floor(Math.random() * playerColors.length) ]}`
+    playerRowBar.style.background = `#${data.randomColor}`
 
     playerRow.appendChild( playerRowTextName )
     playerRow.appendChild( playerRowBar )
     scoreBoardWrapper.appendChild( playerRow )
+
+    playerRow.classList.add('is-revealed')
+    // setTimeout(_ => {
+    //   playerRow.classList.add('is-revealed')
+    // }, 10)
     
     // Add content
     playerRowTextName.innerHTML = data.username
@@ -428,6 +474,20 @@
 
   function fetchNames(nameType) {
     return fetchData(`https://www.randomlists.com/data/names-${nameType}.json`);
+  }
+
+  var removeByAttr = function(arr, attr, value){
+    var i = arr.length;
+    while(i--){
+       if( arr[i] 
+           && arr[i].hasOwnProperty(attr) 
+           && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+
+           arr.splice(i,1);
+
+       }
+    }
+    // return arr;
   }
 
   // Now apply words

@@ -40,13 +40,15 @@ function onConnection(socket) {
     allUsers.push( {
       username: socket.username,
       userID: socket.id,
+      randomColor: data.randomColor
     } )
 
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {
       username: socket.username,
       numUsers: numUsers,
-      allUsers
+      allUsers,
+      randomColor: data.randomColor
     });
   });
 
