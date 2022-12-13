@@ -38,7 +38,7 @@
   let myUserName = ''
 
   // All users. corresponds to / reflects servers allUsers
-  let allUsers = [];
+  let allUsers = [{}];
 
   var drawing = false;
 

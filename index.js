@@ -10,6 +10,20 @@ app.use(express.static(__dirname + '/public'));
 let numUsers = 0;
 let allUsers = [];
 
+var removeByAttr = function(arr, attr, value){
+  var i = arr.length;
+  while(i--){
+     if( arr[i] 
+         && arr[i].hasOwnProperty(attr) 
+         && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+
+         arr.splice(i,1);
+
+     }
+  }
+  // return arr;
+}
+
 function onConnection(socket) {
   let addedUser = false;
 
@@ -63,6 +77,14 @@ function onConnection(socket) {
         numUsers: numUsers
       });
     }
+
+    // Delete the user that left
+    allUsers.forEach( (user, index) => {
+      if (socket.username === user.username) {
+        removeByAttr(allUsers, 'username', socket.username)
+      }
+    })
+
   });
 
   // called from onStartButtonClick - when client clicks start button
