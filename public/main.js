@@ -65,15 +65,22 @@
   }
 
   // Look for when don content is loaded
-  // window.addEventListener('DOMContentLoaded', (event) => {
-  //   console.log('DOM fully loaded and parsed');
+  window.addEventListener('DOMContentLoaded', (event) => {
+    console.log('DOM fully loaded and parsed');
+    joinGame()
+  })
 
-  //   weAreLoaded()
-  // })
-  socket.emit('anotheronejoins', {
-    // socket.id
-    username: Math.random().toFixed(4)
-  });
+  const joinGame = () => {
+    // weAreLoaded()
+    const randomUserName = Math.random().toFixed(4)
+    createANewPlayer( { username: randomUserName })
+
+    socket.emit('anotheronejoins', {
+      // socket.id
+      username: randomUserName
+    });
+  } 
+
 
   // socket.on("connection", (socket) => {
   //   socket.join("nielsroom")
