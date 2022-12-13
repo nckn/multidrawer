@@ -35,6 +35,7 @@
   let random = ''
   let theWord = ''
   let theCurrentDrawerID = ''
+  let myUserName = ''
 
   // All users. corresponds to / reflects servers allUsers
   let allUsers = [];
@@ -75,8 +76,11 @@
 
   const joinGame = () => {
     // weAreLoaded()
+    // Set new user name
     const randomUserName = Math.random().toFixed(4)
     const randomColor = Math.floor(Math.random()*16777215).toString(16)
+
+    myUserName = randomUserName
     createANewPlayer( { username: randomUserName, randomColor })
 
     socket.emit('anotheronejoins', {
@@ -163,6 +167,18 @@
   socket.on('start', (data) => {
     console.log('start')
     console.log(data)
+
+    // TODO - Create all other players
+    const allExistingUsers = data.allUsers
+    allExistingUsers.forEach( (user, index) => {
+      console.log('user was added')
+      console.log(user)
+      if (myUserName !== user.username) {
+        createANewPlayer( { username: user.username, randomColor: user.randomColor })
+      }
+    });
+    
+    // createANewPlayer(data)
   });
 
   window.addEventListener('resize', onResize, false);

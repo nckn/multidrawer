@@ -85,7 +85,8 @@ function onConnection(socket) {
 
   setTimeout(_ => {
     socket.emit('start', {
-      room: socket.rooms
+      room: socket.rooms,
+      allUsers
     });
   }, 200)
 }
