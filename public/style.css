@@ -36,23 +36,53 @@ body * {
   /* background: blue; */
   background: green;
   color: white;
-  padding: 4px 1rem;
+  padding: 4px 0;
   border: none;
-  height: 100px;
+  height: 64px;
   font-size: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel {
+  position: fixed;
+  background: #EFEFEF;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .debug-panel {
-  position: fixed;
   top: 8px;
   right: 8px;
   width: 200px;
   height: auto;
   padding: 20px;
   background: #EFEFEF;
-  border-radius: 4px;
 
   font-size: 10px;
+}
+
+.panel-players {
+  width: calc(100% - 8px);
+  bottom: 40px;
+  left: 4px;
+}
+
+.player-row {
+  display: flex;
+  justify-content: space-between;
+  grid-column-gap: 8px;
+}
+
+.player-row-bar {
+  width: 100%;
+  height: 8px;
+  background: #b5b5b5;
+}
+.player-row-text {
+  margin: 0;
 }
 
 .word-box-wrapper {

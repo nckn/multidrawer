@@ -7,10 +7,17 @@
     'Giraffe', 'Halloween', 'Icecream', 'Jail', 'Kangaroo', 'Longboard',
   ]
 
+  const playerColors = [
+    '#3bd29e',
+    '#7194e3',
+    '#de71e3',
+  ]
+
   var socket = io();
   var canvas = document.getElementsByClassName('whiteboard')[0];
   var colors = document.getElementsByClassName('color');
 
+  var scoreBoardWrapper = document.getElementById('scoreBoardWrapper')
   var wordBoxWrapper = document.getElementById('wordBoxWrapper')
   var startButton = document.getElementById('startButton')
   var currentDrawerId = document.getElementById('currentDrawerId')
@@ -108,6 +115,8 @@
   socket.on('user joined', (data) => {
     console.log('user joined')
     console.log(data)
+
+    createANewPlayer(data)
     // log(`${data.username} joined`);
     // addParticipantsMessage(data);
   });
@@ -136,6 +145,28 @@
   }
 
   init()
+
+  const createANewPlayer = ( data ) => {
+    console.log('createANewPlayer')
+    console.log(data)
+
+    const playerRow = document.createElement('div')
+    const playerRowTextName = document.createElement('p')
+    const playerRowBar = document.createElement('div')
+    
+    playerRow.classList.add('player-row')
+    playerRowTextName.classList.add('player-row-text')
+    playerRowBar.classList.add('player-row-bar')
+    
+    playerRowBar.style.background = `${playerColors[ Math.floor(Math.random() * playerColors.length) ]}`
+
+    playerRow.appendChild( playerRowTextName )
+    playerRow.appendChild( playerRowBar )
+    scoreBoardWrapper.appendChild( playerRow )
+    
+    // Add content
+    playerRowTextName.innerHTML = data.username
+  }
 
   const setFirstdrawer = () => {
     console.log('socket - - - - - ')

@@ -8,6 +8,7 @@ const port = process.env.PORT || 3000;
 app.use(express.static(__dirname + '/public'));
 
 let numUsers = 0;
+let allUsers = [];
 
 function onConnection(socket) {
   let addedUser = false;
@@ -34,6 +35,13 @@ function onConnection(socket) {
     // socket.emit('login', {
     //   numUsers: numUsers
     // });
+
+    // TODO - Add to array of users
+    allUsers.push( {
+      username: socket.username,
+      userID: socket.id,
+    } )
+
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {
       username: socket.username,
