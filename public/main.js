@@ -22,6 +22,9 @@
   var startButton = document.getElementById('startButton')
   var currentDrawerId = document.getElementById('currentDrawerId')
   var currentWord = document.getElementById('currentWord')
+  
+  // Countdown
+  var fillCountDown = document.getElementById('fillCountDown')
 
   var context = canvas.getContext('2d');
 
@@ -320,14 +323,20 @@
 
   }
 
+  var startVal = 20;
   function startCcountdown(){
-    var reverse_counter = 10;
+    var counter = startVal;
     var downloadTimer = setInterval(function(){
-      document.getElementById("pbar").value = 10 - --reverse_counter;
-      if(reverse_counter <= 0)
+      // document.getElementById("pbar").value = 10 - --counter;
+      // fillCountDown.style.width = `${((counter / startVal)) * 100}%`;
+      fillCountDown.style.width = `${(100 / startVal) * counter}%`;
+
+      counter--
+
+      if(counter <= 0)
         clearInterval(downloadTimer);
       
-      document.getElementById("counting").innerHTML= reverse_counter;
+      document.getElementById("fillCountDownNumber").innerHTML= counter;
       
     },1000);
   }

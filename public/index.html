@@ -32,8 +32,13 @@
   <div id="scoreBoardWrapper" class="panel panel-players">
     <p class="panel-title">Players</p>
   </div>
+  
+  <div class="panel countdown">
+    <div id="fillCountDown" class="countdown-fill"></div>
+    <p id="fillCountDownNumber" class="countdown-number">10</p>
+  </div>
 
-  <progress value="0" max="10" id="pbar" ></progress><p id="counting">10</p>
+  <!-- <progress value="0" max="100" id="pbar" ></progress><p id="counting">10</p> -->
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/main.js"></script>
