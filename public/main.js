@@ -74,10 +74,46 @@
     joinGame()
   })
 
+  const makeid = (length) => {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
+  function rapNameGenerator(){
+    // Add your own words to the wordlist. Be careful to obey the showed syntax
+    
+    var wordlist1 = ["Easy","Big","Golden","Flexer","Poffin","Three Time","Holy","‘Your First Name’","Big Man","Big Time","Lighter","Muscled","‘Your First Name’","YOUR INNITIALS","Everyday","Lil","Little","‘Your First Name’","Toned","Dirty","Dusty","Clean","‘Your First Name’","Fly","Gang","Game","The","Quick","Elementor","Guy","Machine Mouth","Two Tone","Rider","Vanilla","Chocolate","‘Your First Name’","Coco","Marmalade","Viral","Slinger","Ten Toes","Scamazon","Your Dad","Digits","Post","Angry","Happy","Deadly","‘Your First Name’","Talented","Positive","Army","Platinum","Scolder","Scholor","‘Your First Name’","Ruthless","Phoner","Eager","Lawn","‘Your First Name’","Every Cloud","Last Chance","Baby","Flower","Shower","‘Your First Name’","Fast Tounge","Duke","Chewey","Gappy","Overflow","Louder","‘Your First Name’","Sergeant","Mr","Royal","Pump","‘Your First Name’","Shoveler","Hats Down","Forceful","Fly","‘Your First Name’","Greezy","Bat Man","Show Time","Cash","Mulla","Counter","Aries","Taurus","Leo","Virgo","Libra","Evergreen","Audio","Certi","Certified","Gorilla","Park","Brudda","YOUR INNITIALS","Brother","Key","Bearded","‘Your First Name’","Fresh","Old","Old Man","P.O","Po","‘Your First Name’","Dean","Street","More","Drive By","‘Your First Name’",];
+    var wordlist2 = ["Q","Flex","Money","Baddie","E","Tone","R","Tinee","T","Grapes","Every Day","Dog","Pence","Cent","The Rapper","Dirty","The Stunter","Da Boss","Uzi","Flame","‘First Letter Of Your Last Name’","Time","Hustle","1","Thug","North","Brown","Green","2","G","Gee","Cream","East","3","Paper","Chains","Tumble","Roll","4","Thrones","Clapper","Mute","‘First Letter Of Your Last Name’","Bank","5","Dimes","On Da Corner","2 Gangster","‘First Letter Of Your Last Name’","6","Drinkz","Friday","Recruit","Pump","Rhymes","7","Cuz","Rider","Green","Fam","Gold","8","Light","Ice","Face","Black","Da Rapper","South","Man","9","Boy","Styles","Clips","‘First Letter Of Your Last Name’","Spray","Mr","‘First Letter Of Your Last Name’","Royal Man","Ape","Smith","Tay","Jay","Trillion","West","‘First Letter Of Your Last Name’","Dukes","Rap Up","Tape","Son","Planner","Habits","Z","Is Me","‘First Letter Of Your Last Name’","’Your First Name’","Gold","Silver","2.0","4000","Eternal","‘First Letter Of Your Last Name’","Dean","Malone","O Geezy","Mon","Grass","Roller","Barrel","Peez","IQ","Wordz","‘First Letter Of Your Last Name’","Gums","Sims","London","Place","’Your First Name’","‘First Letter Of Your Last Name’",]
+    
+    // Random numbers are made 
+    var randomNumber1 = parseInt(Math.random() * wordlist1.length);
+    var randomNumber2 = parseInt(Math.random() * wordlist2.length);
+    var name = wordlist1[randomNumber1] + " " + wordlist2[randomNumber2];			
+    return name
+    //alert(name); //Remove first to slashes to alert the name
+    
+    //If there's already a name it is removed  
+    // if(document.getElementById("result")){
+    //   document.getElementById("placeholder").removeChild(document.getElementById("result"));
+    // }
+    // // A div element is created to show the generated name. The Name is added as a textnode. Textnode is added to the placeholder.
+    // var element = document.createElement("div");
+    // element.setAttribute("id", "result");
+    // element.appendChild(document.createTextNode(name));
+    // document.getElementById("placeholder").appendChild(element);
+  }
+
   const joinGame = () => {
     // weAreLoaded()
     // Set new user name
-    const randomUserName = Math.random().toFixed(4)
+    // const randomUserName = Math.random().toFixed(4)
+    // const randomUserName = makeid( 6 )
+    const randomUserName = rapNameGenerator()
     const randomColor = Math.floor(Math.random()*16777215).toString(16)
 
     myUserName = randomUserName
@@ -284,9 +320,23 @@
 
   }
 
+  function startCcountdown(){
+    var reverse_counter = 10;
+    var downloadTimer = setInterval(function(){
+      document.getElementById("pbar").value = 10 - --reverse_counter;
+      if(reverse_counter <= 0)
+        clearInterval(downloadTimer);
+      
+      document.getElementById("counting").innerHTML= reverse_counter;
+      
+    },1000);
+  }
+
   // The start button is clicked
   function onStartButtonClick(e){
     console.log('onStartButtonClick')
+
+    startCcountdown()
 
     // currentDrawerId.innerHTML = socket.id
 

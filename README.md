@@ -18,3 +18,4 @@ a port by supplying the `PORT` env variable.
 
 
 - Add sounds
+- show gifs
