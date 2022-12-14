@@ -123,8 +123,9 @@ body * {
   height: 64px;
   /* padding: 1rem; */
 }
-.countdown.iscountingdown {
-  animation: mymove 20s infinite;
+.countdown-fill.iscountingdown {
+  animation: mymove 20s;
+  animation-timing-function: linear;
 }
 .countdown-fill {
   width: 100;
@@ -137,8 +138,8 @@ body * {
   top: 50%;
 }
 @keyframes mymove {
-  from {left: 0px;}
-  to {left: 200px;}
+  from {width: 100%;}
+  to {width: 0%}
 }
 /* countdown - end */
 

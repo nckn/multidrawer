@@ -325,11 +325,13 @@
 
   var startVal = 20;
   function startCcountdown(){
+    fillCountDown.classList.add('iscountingdown')
+    fillCountDown.style.animationDuration = `${startVal}s`
     var counter = startVal;
     var downloadTimer = setInterval(function(){
       // document.getElementById("pbar").value = 10 - --counter;
       // fillCountDown.style.width = `${((counter / startVal)) * 100}%`;
-      fillCountDown.style.width = `${(100 / startVal) * counter}%`;
+      // fillCountDown.style.width = `${(100 / startVal) * counter}%`;
 
       counter--
 
