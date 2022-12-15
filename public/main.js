@@ -550,11 +550,15 @@
       box.classList.remove('word-box--selected')
       // Then add to the random wordbox
       // If you are not the current drawer you cant draw
-      if (String(currentDrawerId.innerHTML) == socket.id) {
-        if (index === random) {
-          box.classList.add('word-box--selected')
+      // if (String(currentDrawerId.innerHTML) == socket.id) { // old
+      
+      setTimeout(_ => {
+        if (String(player) === socket.id) {
+          if (index === random) {
+            box.classList.add('word-box--selected')
+          }
         }
-      }
+      }, 10)
     })
   }
 
@@ -595,7 +599,8 @@
     if (!drawing) { return; }
     drawing = false;
     // If you are not the current drawer you cant draw
-    if (String(currentDrawerId.innerHTML) == socket.id) {
+    // TODO - looking into making sure we are allowed to draw
+    if (String(currentDrawerId.innerHTML) === socket.id) {
       drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
     }
   }
@@ -603,7 +608,7 @@
   function onMouseMove(e){
     if (!drawing) { return; }
     // If you are not the current drawer you cant draw
-    if (String(currentDrawerId.innerHTML) == socket.id) {
+    if (String(currentDrawerId.innerHTML) === socket.id) {
       drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
     }
     current.x = e.clientX||e.touches[0].clientX;
