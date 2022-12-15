@@ -18,6 +18,7 @@
 
   let blockTime = 10000
   let pointsPerWin = 10
+  let currentDrawerName = ''
 
   var socket = io();
   var canvas = document.getElementsByClassName('whiteboard')[0];
@@ -89,6 +90,7 @@
   function onKeyUp (e) {
     console.log(e)
     if (e.key === 's') {
+      currentDrawerName = myUserName
       onStartButtonClick()
     }
   }
@@ -444,6 +446,7 @@
     }
   }
   
+  // come from guessword response
   function onClickWordBoxEvent(data){
     console.log('word guess')
     console.log('data.word')
@@ -461,6 +464,8 @@
     if (data.word === theWord) {
       // document.body.style.background = 'red'
       // document.body.classList.add('body--guessed')
+
+      currentDrawerName = data.playerName
 
       assignPoints(data)
 
@@ -553,7 +558,8 @@
       // if (String(currentDrawerId.innerHTML) == socket.id) { // old
       
       setTimeout(_ => {
-        if (String(player) === socket.id) {
+        // if (String(player) === socket.id) {
+        if (currentDrawerName === myUserName) {
           if (index === random) {
             box.classList.add('word-box--selected')
           }
@@ -589,7 +595,8 @@
   function onMouseDown(e){
     drawing = true;
     // If you are not the current drawer you cant draw
-    if (String(currentDrawerId.innerHTML) == socket.id) {
+    // if (String(currentDrawerId.innerHTML) == socket.id) {
+    if (currentDrawerName === myUserName) {
       current.x = e.clientX||e.touches[0].clientX;
       current.y = e.clientY||e.touches[0].clientY;
     }
@@ -600,7 +607,8 @@
     drawing = false;
     // If you are not the current drawer you cant draw
     // TODO - looking into making sure we are allowed to draw
-    if (String(currentDrawerId.innerHTML) === socket.id) {
+    // if (String(currentDrawerId.innerHTML) === socket.id) {
+    if (currentDrawerName === myUserName) {
       drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
     }
   }
@@ -608,7 +616,8 @@
   function onMouseMove(e){
     if (!drawing) { return; }
     // If you are not the current drawer you cant draw
-    if (String(currentDrawerId.innerHTML) === socket.id) {
+    // if (String(currentDrawerId.innerHTML) === socket.id) {
+    if (currentDrawerName === myUserName) {
       drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
     }
     current.x = e.clientX||e.touches[0].clientX;
