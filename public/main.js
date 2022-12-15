@@ -90,8 +90,8 @@
   function rapNameGenerator(){
     // Add your own words to the wordlist. Be careful to obey the showed syntax
     
-    var wordlist1 = ["Easy","Big","Golden","Flexer","Poffin","Three Time","Holy","Big Man","Big Time","Lighter","Muscled","Everyday","Lil","Little","Toned","Dirty","Dusty","Clean","Fly","Gang","Game","The","Quick","Elementor","Guy","Machine Mouth","Two Tone","Rider","Vanilla","Chocolate","Coco","Marmalade","Viral","Slinger","Ten Toes","Scamazon","Your Dad","Digits","Post","Angry","Happy","Deadly","Talented","Positive","Army","Platinum","Scolder","Scholor","Ruthless","Phoner","Eager","Lawn","Every Cloud","Last Chance","Baby","Flower","Shower","Fast Tounge","Duke","Chewey","Gappy","Overflow","Louder","Sergeant","Mr","Royal","Pump","Shoveler","Hats Down","Forceful","Fly","Greezy","Bat Man","Show Time","Cash","Mulla","Counter","Aries","Taurus","Leo","Virgo","Libra","Evergreen","Audio","Certi","Certified","Gorilla","Park","Brudda","Brother","Key","Bearded","Fresh","Old","Old Man","P.O","Po","Dean","Street","More","Drive By",];
-    var wordlist2 = ["Q","Flex","Money","Baddie","E","Tone","R","Tinee","T","Grapes","Every Day","Dog","Pence","Cent","The Rapper","Dirty","The Stunter","Da Boss","Uzi","Flame","Time","Hustle","1","Thug","North","Brown","Green","2","G","Gee","Cream","East","3","Paper","Chains","Tumble","Roll","4","Thrones","Clapper","Mute","Bank","5","Dimes","On Da Corner","2 Gangster","6","Drinkz","Friday","Recruit","Pump","Rhymes","7","Cuz","Rider","Green","Fam","Gold","8","Light","Ice","Face","Black","Da Rapper","South","Man","9","Boy","Styles","Clips","Spray","Mr","Royal Man","Ape","Smith","Tay","Jay","Trillion","West","Dukes","Rap Up","Tape","Son","Planner","Habits","Z","Is Me","’Your First Name’","Gold","Silver","2.0","4000","Eternal","Dean","Malone","O Geezy","Mon","Grass","Roller","Barrel","Peez","IQ","Wordz","Gums","Sims","London","Place",]
+    var wordlist1 = ["Easy","Big","Golden","Flexer","Myssis","Retardo","Poffin","Three Time","Holy","Big Man","Big Time","Lighter","Muscled","Everyday","Lil","Little","Toned","Dirty","Dusty","Clean","Fly","Gang","Game","The","Quick","Elementor","Guy","Machine Mouth","Two Tone","Rider","Vanilla","Chocolate","Coco","Marmalade","Viral","Slinger","Ten Toes","Scamazon","Your Dad","Digits","Post","Angry","Happy","Deadly","Talented","Positive","Army","Platinum","Scolder","Scholor","Ruthless","Phoner","Eager","Lawn","Every Cloud","Last Chance","Baby","Flower","Shower","Fast Tounge","Duke","Chewey","Gappy","Overflow","Louder","Sergeant","Mr","Royal","Pump","Shoveler","Hats Down","Forceful","Fly","Greezy","Bat Man","Show Time","Cash","Mulla","Counter","Aries","Taurus","Leo","Virgo","Libra","Evergreen","Audio","Certi","Certified","Gorilla","Park","Brudda","Brother","Key","Bearded","Fresh","Old","Old Man","P.O","Po","Dean","Street","More","Drive By",];
+    var wordlist2 = ["Q","Flex","Money","Baddie","E","Tone","R","Tinee","Ricardo","T","Grapes","Every Day","Dog","Pence","Cent","The Rapper","Dirty","The Stunter","Da Boss","Uzi","Flame","Time","Hustle","1","Thug","North","Brown","Green","2","G","Gee","Cream","East","3","Paper","Chains","Tumble","Roll","4","Thrones","Clapper","Mute","Bank","5","Dimes","On Da Corner","2 Gangster","6","Drinkz","Friday","Recruit","Pump","Rhymes","7","Cuz","Rider","Green","Fam","Gold","8","Light","Ice","Face","Black","Da Rapper","South","Man","9","Boy","Styles","Clips","Spray","Mr","Royal Man","Ape","Smith","Tay","Jay","Trillion","West","Dukes","Rap Up","Tape","Son","Planner","Habits","Z","Is Me","Gold","Silver","2.0","4000","Eternal","Dean","Malone","O Geezy","Mon","Grass","Roller","Barrel","Peez","IQ","Wordz","Gums","Sims","London","Place",]
     
     // Random numbers are made 
     var randomNumber1 = parseInt(Math.random() * wordlist1.length);
@@ -120,7 +120,7 @@
     const randomColor = Math.floor(Math.random()*16777215).toString(16)
 
     myUserName = randomUserName
-    createANewPlayer( { username: randomUserName, randomColor })
+    createANewPlayer( { username: randomUserName, randomColor, isItMe: true })
 
     socket.emit('anotheronejoins', {
       // socket.id
@@ -156,6 +156,7 @@
   });
   
   // When receiving back from server
+  // If someone try to guess it
   socket.on('guessword', (data) => {
     console.log('a word has been guessed')
 
@@ -257,6 +258,10 @@
     playerRowTextName.classList.add('player-row-text')
     playerRowBar.classList.add('player-row-bar')
 
+    if (data.isItMe) {
+      playerRowTextName.classList.add('player-row-text--isitme')
+    }
+
     // Add name attribute to playerRow
     playerRow.setAttribute('data-name', data.username)
     
@@ -343,8 +348,15 @@
     },1000);
   }
 
+  function hideStartButton(e){
+    startButton.classList.add('hidden')
+  }
+
   // The start button is clicked
   function onStartButtonClick(e){
+    
+    hideStartButton()
+
     console.log('onStartButtonClick')
 
     startCcountdown()
@@ -410,6 +422,9 @@
 
     // Check if in fact we have the correct word
     // if (data.word === words[random]) {
+    // *****************
+    // *** Key event ***
+    // Someone guessed it!
     if (data.word === theWord) {
       document.body.style.background = 'red'
       document.body.classList.add('body--guessed')
