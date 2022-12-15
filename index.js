@@ -9,6 +9,7 @@ app.use(express.static(__dirname + '/public'));
 
 let numUsers = 0;
 let allUsers = [];
+let theWord = ''
 
 var removeByAttr = function(arr, attr, value){
   var i = arr.length;
@@ -54,7 +55,8 @@ function onConnection(socket) {
     allUsers.push( {
       username: socket.username,
       userID: socket.id,
-      randomColor: data.randomColor
+      randomColor: data.randomColor,
+      points: 0
     } )
 
     // echo globally (all clients) that a person has connected
@@ -62,7 +64,8 @@ function onConnection(socket) {
       username: socket.username,
       numUsers: numUsers,
       allUsers,
-      randomColor: data.randomColor
+      randomColor: data.randomColor,
+      id: socket.id
     });
   });
 
@@ -92,7 +95,10 @@ function onConnection(socket) {
     // console.log('setdrawer')
     // console.log(data)
     console.log('- - - - - the word - - - -')
-    console.log(data.word)
+    
+    theWord = data.word
+    console.log(theWord)
+
     socket.broadcast.emit('setdrawer response', data)
   })
   
@@ -104,7 +110,20 @@ function onConnection(socket) {
   socket.on('guessword', (data) => {
     console.log('guessword - - - - - - -')
     console.log(data)
-    socket.broadcast.emit('guessword', data)
+    
+    if (data.word === theWord) {
+      data.points = 2
+    }
+    console.log(data)
+
+    socket.broadcast.emit('guessword response', data)
+
+    // Delete the user that left
+    // allUsers.forEach( (user, index) => {
+    //   if (socket.username === user.username) {
+    //     removeByAttr(allUsers, 'username', socket.username)
+    //   }
+    // })
   })
 
   setTimeout(_ => {

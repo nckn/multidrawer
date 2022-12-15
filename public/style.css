@@ -127,7 +127,8 @@ body * {
   opacity: 1;
 }
 .player-row-bar {
-  width: 100%;
+  /* width: 100%; */
+  width: 2%;
   height: 8px;
   background: #b5b5b5;
 

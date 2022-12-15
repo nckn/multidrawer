@@ -13,6 +13,8 @@
     '#de71e3',
   ]
 
+  let blockTime = 10000
+
   var socket = io();
   var canvas = document.getElementsByClassName('whiteboard')[0];
   var colors = document.getElementsByClassName('color');
@@ -87,7 +89,7 @@
     const randomColor = Math.floor(Math.random()*16777215).toString(16)
 
     myUserName = randomUserName
-    createANewPlayer( { username: randomUserName, randomColor, isItMe: true })
+    createANewPlayer( { username: randomUserName, randomColor, id: socket.id, isItMe: true })
 
     socket.emit('anotheronejoins', {
       // socket.id
@@ -112,11 +114,11 @@
   socket.on('setdrawer response', (data) => {
     console.log('we be setting drawer')
 
-    console.log('socket')
-    console.log(socket)
-    console.log('socket.id')
-    console.log(socket.id)
-    console.log(data.word)
+    // console.log('socket')
+    // console.log(socket)
+    // console.log('socket.id')
+    // console.log(socket.id)
+    // console.log(data.word)
 
     // theWord = socket.word
     setWord('server', data.word)
@@ -129,7 +131,7 @@
   
   // When receiving back from server
   // If someone try to guess it
-  socket.on('guessword', (data) => {
+  socket.on('guessword response', (data) => {
     console.log('a word has been guessed')
 
     console.log('data')
@@ -185,7 +187,7 @@
       console.log('user was added')
       console.log(user)
       if (myUserName !== user.username) {
-        createANewPlayer( { username: user.username, randomColor: user.randomColor })
+        createANewPlayer( { username: user.username, randomColor: user.randomColor, id: user.id })
       }
     });
     
@@ -228,13 +230,15 @@
     playerRow.classList.add('player-row')
     playerRowTextName.classList.add('player-row-text')
     playerRowBar.classList.add('player-row-bar')
-
+    
     if (data.isItMe) {
+      playerRowBar.classList.add('my-bar')
       playerRowTextName.classList.add('player-row-text--isitme')
     }
 
     // Add name attribute to playerRow
     playerRow.setAttribute('data-name', data.username)
+    playerRow.setAttribute('data-id', data.id)
     
     // playerRowBar.style.background = `${playerColors[ Math.floor(Math.random() * playerColors.length) ]}`
     playerRowBar.style.background = `#${data.randomColor}`
@@ -268,10 +272,10 @@
   }
 
   function drawLine(x0, y0, x1, y1, color, emit){
-    console.log('socket.id')
-    console.log(socket.id)
-    console.log('String(currentDrawerId.innerHTML)')
-    console.log(String(currentDrawerId.innerHTML))
+    // console.log('socket.id')
+    // console.log(socket.id)
+    // console.log('String(currentDrawerId.innerHTML)')
+    // console.log(String(currentDrawerId.innerHTML))
 
     context.beginPath();
     context.moveTo(x0, y0);
@@ -299,7 +303,8 @@
 
   }
 
-  var startVal = 20;
+  // The timer
+  var startVal = 30;
   function startCcountdown(){
     fillCountDown.classList.add('iscountingdown')
     fillCountDown.style.animationDuration = `${startVal}s`
@@ -364,6 +369,7 @@
     });
   }
 
+  // Guess word - locally
   // onClickWordBox
   function onClickWordBox(word) {
     console.log('the word is:')
@@ -372,18 +378,23 @@
     // Did I guess correctly?
     // Yes. 
     // console.log(theWord)
-    // if () {
-      
-    // }
-    // // No 
-    // else {
-    //   blockMoreGuessing()
-    // }
+    if (word === theWord) {
+      // *** I guessed the word ***
+      // document.body.style.background = 'green'
+
+      // I guess it gives me points
+      assignPoints( {playerName: myUserName } )
+    }
+    // No 
+    else {
+      blockMoreGuessing()
+    }
 
     // *************************************************
     // **** emit event - sent from client to server ****
     socket.emit('guessword', {
       player: socket.id,
+      playerName: myUserName,
       word: word
     });
   }
@@ -391,7 +402,7 @@
   function onDrawingEvent(data){
     var w = canvas.width;
     var h = canvas.height;
-    console.log('drawing')
+    // console.log('drawing')
     drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
   }
   
@@ -421,8 +432,10 @@
     // *** Key event ***
     // Someone guessed it!
     if (data.word === theWord) {
-      document.body.style.background = 'red'
-      document.body.classList.add('body--guessed')
+      // document.body.style.background = 'red'
+      // document.body.classList.add('body--guessed')
+
+      assignPoints(data)
 
       theCurrentDrawerID = data.player
 
@@ -441,8 +454,38 @@
     // currentDrawerId.innerHTML = data.player
   }
 
+  const assignPoints = (data) => {
+    console.log('someone guessed it')
+    // console.log('data.player', data.player, 'socket.id', socket.id)
+    console.log('data.playerName', data.playerName, 'myUserName', myUserName)
+
+    // get the point bar
+    const allBars = [...document.getElementsByClassName('player-row')] 
+    allBars.forEach( (bar, index) => {
+      const dataName = String(bar.getAttribute('data-name'))
+      console.log('dataName', dataName, 'data.playerName', data.playerName)
+      if (dataName === String(data.playerName)) {
+        bar.children[ 1 ].style.width = `${10}%`
+        // bar.querySelector('player-row-bar').style.width = `${10}%`
+      }
+    })
+    // const theOneWithPoints = 
+
+    // if (data.username ===) {}
+    // if (theCurrentDrawerID === socket.id) {
+    // if (data.player === socket.id) {
+    // if (data.playerName === myUserName) {
+    //   const myPlayerRowBar = document.querySelector('.my-bar')
+    //   myPlayerRowBar.style.width = `${10}%`
+    // }
+  }
+
+  // Block guessing locally
   const blockMoreGuessing = () => {
     wordBoxWrapper.classList.add('block-more-guessing')
+    setTimeout(_ => {
+      wordBoxWrapper.classList.remove('block-more-guessing')
+    }, blockTime)
   }
 
   function arrangeForDrawer( {player, random, word}) {
