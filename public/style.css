@@ -94,7 +94,37 @@ body * {
 
   font-size: 10px;
 
+}
+.debug-panel.debug--hidden {
   visibility: hidden;
+  pointer-events: none;
+}
+
+.panel.panel-tools {
+  width: 64px;
+  height: 120px;
+  right: 4px;
+  top: calc(50% - 60px);
+  display: flex;
+  grid-row-gap: 8px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.color-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  cursor: pointer;
+}
+/* .color-dot:hover {} */
+.color-dot--black {
+  background: black;
+}
+.color-dot--white {
+  background: white;
+  border: 1px solid #bfbfbf;
 }
 
 .panel-players {

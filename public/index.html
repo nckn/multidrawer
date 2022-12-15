@@ -24,7 +24,7 @@
 
   <button id="startButton">Start drawing !</button>
 
-  <div class="panel debug-panel">
+  <div id="debugPanel debug--hidden" class="panel debug-panel">
     <div id="currentDrawerId" class="debug-panel-value">-</div>
     <div id="currentWord" class="debug-panel-value">-</div>
   </div>
@@ -35,6 +35,11 @@
   
   <p id="theWord">-</p>
   
+  <div class="panel panel-tools">
+    <div id="colorBlack" class="color-dot color-dot--black"></div>
+    <div id="colorWhite" class="color-dot color-dot--white"></div>
+  </div>
+
   <div class="panel panel-countdown">
     <div id="fillCountDown" class="countdown-fill"></div>
     <p id="fillCountDownNumber" class="countdown-number">10</p>

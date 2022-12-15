@@ -25,6 +25,7 @@
   var colors = document.getElementsByClassName('color');
 
   var scoreBoardWrapper = document.getElementById('scoreBoardWrapper')
+  var debugPanel = document.getElementById('debugPanel')
   var wordBoxWrapper = document.getElementById('wordBoxWrapper')
   var theWordText = document.getElementById('theWord')
   var startButton = document.getElementById('startButton')
@@ -92,6 +93,10 @@
     if (e.key === 's') {
       currentDrawerName = myUserName
       onStartButtonClick()
+    }
+    
+    if (e.key === 'å') {
+      debugPanel.classList.contains('debug--hidden') ? debugPanel.classList.remove('debug--hidden') : debugPanel.classList.add('debug--hidden') 
     }
   }
 
@@ -537,6 +542,8 @@
 
   function arrangeForDrawer( {player, random, word}) {
     // currentDrawerId.innerHTML = data.player
+    
+    // Debug
     currentDrawerId.innerHTML = player
     currentWord.innerHTML = word
 
@@ -558,8 +565,8 @@
       // if (String(currentDrawerId.innerHTML) == socket.id) { // old
       
       setTimeout(_ => {
-        // if (String(player) === socket.id) {
-        if (currentDrawerName === myUserName) {
+        // if (currentDrawerName === myUserName) {
+        if (String(player) === socket.id) {
           if (index === random) {
             box.classList.add('word-box--selected')
           }
@@ -595,8 +602,8 @@
   function onMouseDown(e){
     drawing = true;
     // If you are not the current drawer you cant draw
-    // if (String(currentDrawerId.innerHTML) == socket.id) {
-    if (currentDrawerName === myUserName) {
+    // if (currentDrawerName === myUserName) {
+    if (String(currentDrawerId.innerHTML) == socket.id) {
       current.x = e.clientX||e.touches[0].clientX;
       current.y = e.clientY||e.touches[0].clientY;
     }
@@ -607,8 +614,8 @@
     drawing = false;
     // If you are not the current drawer you cant draw
     // TODO - looking into making sure we are allowed to draw
-    // if (String(currentDrawerId.innerHTML) === socket.id) {
-    if (currentDrawerName === myUserName) {
+    // if (currentDrawerName === myUserName) {
+    if (String(currentDrawerId.innerHTML) === socket.id) {
       drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
     }
   }
@@ -616,8 +623,8 @@
   function onMouseMove(e){
     if (!drawing) { return; }
     // If you are not the current drawer you cant draw
-    // if (String(currentDrawerId.innerHTML) === socket.id) {
-    if (currentDrawerName === myUserName) {
+    // if (currentDrawerName === myUserName) {
+    if (String(currentDrawerId.innerHTML) === socket.id) {
       drawLine(current.x, current.y, e.clientX||e.touches[0].clientX, e.clientY||e.touches[0].clientY, current.color, true);
     }
     current.x = e.clientX||e.touches[0].clientX;
