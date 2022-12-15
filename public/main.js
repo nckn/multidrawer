@@ -430,6 +430,20 @@
     // currentDrawerId.innerHTML = data.player
   }
   
+  // Play the sound
+  function playSound(kind) {
+    var audio = ''
+
+    if (kind === 'correct guess') {
+      audio = new Audio('./snd/coin.wav')
+      audio.play()
+    }
+    else if (kind === 'winner') {
+      audio = new Audio('./snd/jingle-win-01.wav')
+      audio.play()
+    }
+  }
+  
   function onClickWordBoxEvent(data){
     console.log('word guess')
     console.log('data.word')
@@ -453,6 +467,9 @@
       theCurrentDrawerID = data.player
 
       onStartButtonClick()
+
+      // Play the sound
+      playSound('correct guess')
 
       // setTimeout(_ => {
       //   document.body.style.background = 'white'
@@ -483,8 +500,13 @@
         // const style = document.computed
         let style = window.getComputedStyle(bar, null)
         let width = parseInt(style.width, 10)
+        
         // var width = parseInt(bar.style.width, 10);
         bar.style.width = `${width + pointsPerWin}%`
+
+        if (width > 99) {
+          playSound('winner')
+        }
         // bar.style.width = `${10}%`
         // bar.querySelector('player-row-bar').style.width = `${10}%`
       }
