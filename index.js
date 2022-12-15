@@ -137,3 +137,11 @@ function onConnection(socket) {
 io.on('connection', onConnection);
 
 http.listen(port, () => console.log(`listening on http://localhost:${port}`));
+
+// User info data
+// allUsers.push( {
+//   username: socket.username,
+//   userID: socket.id,
+//   randomColor: data.randomColor,
+//   points: 0
+// } )
