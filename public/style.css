@@ -128,9 +128,13 @@ body * {
 }
 .player-row-bar {
   /* width: 100%; */
-  width: 2%;
+  width: 1%;
   height: 8px;
   background: #b5b5b5;
+
+  /* transition: all 0.25s ease-in-out; */
+  transition: all 0.25s cubic-bezier(0.58,-0.01, 0.62, 1.58);
+  border-radius: 1px;
 
 }
 .panel-title {

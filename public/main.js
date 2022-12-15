@@ -5,7 +5,10 @@
   const words = [
     'Airplane', 'Bazooka', 'Circus', 'Dromedary', 'Elephant', 'Flower',
     'Giraffe', 'Halloween', 'Icecream', 'Jail', 'Kangaroo', 'Longboard',
+    'Moon', 'Nails', 'Oreo', 'Pillow', 'Queen', 'Radio', 'Sun', 'Tennis'
   ]
+  // Put words that are drawn in here so they dont appear again
+  let wordsDrawn = []
 
   const playerColors = [
     '#3bd29e',
@@ -14,6 +17,7 @@
   ]
 
   let blockTime = 10000
+  let pointsPerWin = 10
 
   var socket = io();
   var canvas = document.getElementsByClassName('whiteboard')[0];
@@ -59,6 +63,8 @@
   canvas.addEventListener('touchcancel', onMouseUp, false);
   canvas.addEventListener('touchmove', throttle(onMouseMove, 10), false);
 
+  document.addEventListener('keyup', onKeyUp, false)
+
   // prevent elastic scrolling
   document.body.addEventListener(
     'touchmove',
@@ -79,6 +85,13 @@
     console.log('DOM fully loaded and parsed');
     joinGame()
   })
+
+  function onKeyUp (e) {
+    console.log(e)
+    if (e.key === 's') {
+      onStartButtonClick()
+    }
+  }
 
   const joinGame = () => {
     // weAreLoaded()
@@ -461,11 +474,18 @@
 
     // get the point bar
     const allBars = [...document.getElementsByClassName('player-row')] 
-    allBars.forEach( (bar, index) => {
-      const dataName = String(bar.getAttribute('data-name'))
+    allBars.forEach( (barParent, index) => {
+      const dataName = String(barParent.getAttribute('data-name'))
       console.log('dataName', dataName, 'data.playerName', data.playerName)
       if (dataName === String(data.playerName)) {
-        bar.children[ 1 ].style.width = `${10}%`
+
+        const bar = barParent.children[ 1 ]
+        // const style = document.computed
+        let style = window.getComputedStyle(bar, null)
+        let width = parseInt(style.width, 10)
+        // var width = parseInt(bar.style.width, 10);
+        bar.style.width = `${width + pointsPerWin}%`
+        // bar.style.width = `${10}%`
         // bar.querySelector('player-row-bar').style.width = `${10}%`
       }
     })
