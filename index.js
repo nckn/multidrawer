@@ -91,7 +91,9 @@ function onConnection(socket) {
   socket.on('setdrawer', (data) => {
     // console.log('setdrawer')
     // console.log(data)
-    socket.broadcast.emit('setdrawer', data)
+    console.log('- - - - - the word - - - -')
+    console.log(data.word)
+    socket.broadcast.emit('setdrawer response', data)
   })
   
   // called from onClickWordBox - when client guesses a word

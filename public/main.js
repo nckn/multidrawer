@@ -19,6 +19,7 @@
 
   var scoreBoardWrapper = document.getElementById('scoreBoardWrapper')
   var wordBoxWrapper = document.getElementById('wordBoxWrapper')
+  var theWordText = document.getElementById('theWord')
   var startButton = document.getElementById('startButton')
   var currentDrawerId = document.getElementById('currentDrawerId')
   var currentWord = document.getElementById('currentWord')
@@ -77,40 +78,6 @@
     joinGame()
   })
 
-  const makeid = (length) => {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
-
-  function rapNameGenerator(){
-    // Add your own words to the wordlist. Be careful to obey the showed syntax
-    
-    var wordlist1 = ["Easy","Big","Golden","Flexer","Myssis","Retardo","Poffin","Three Time","Holy","Big Man","Big Time","Lighter","Muscled","Everyday","Lil","Little","Toned","Dirty","Dusty","Clean","Fly","Gang","Game","The","Quick","Elementor","Guy","Machine Mouth","Two Tone","Rider","Vanilla","Chocolate","Coco","Marmalade","Viral","Slinger","Ten Toes","Scamazon","Your Dad","Digits","Post","Angry","Happy","Deadly","Talented","Positive","Army","Platinum","Scolder","Scholor","Ruthless","Phoner","Eager","Lawn","Every Cloud","Last Chance","Baby","Flower","Shower","Fast Tounge","Duke","Chewey","Gappy","Overflow","Louder","Sergeant","Mr","Royal","Pump","Shoveler","Hats Down","Forceful","Fly","Greezy","Bat Man","Show Time","Cash","Mulla","Counter","Aries","Taurus","Leo","Virgo","Libra","Evergreen","Audio","Certi","Certified","Gorilla","Park","Brudda","Brother","Key","Bearded","Fresh","Old","Old Man","P.O","Po","Dean","Street","More","Drive By",];
-    var wordlist2 = ["Q","Flex","Money","Baddie","E","Tone","R","Tinee","Ricardo","T","Grapes","Every Day","Dog","Pence","Cent","The Rapper","Dirty","The Stunter","Da Boss","Uzi","Flame","Time","Hustle","1","Thug","North","Brown","Green","2","G","Gee","Cream","East","3","Paper","Chains","Tumble","Roll","4","Thrones","Clapper","Mute","Bank","5","Dimes","On Da Corner","2 Gangster","6","Drinkz","Friday","Recruit","Pump","Rhymes","7","Cuz","Rider","Green","Fam","Gold","8","Light","Ice","Face","Black","Da Rapper","South","Man","9","Boy","Styles","Clips","Spray","Mr","Royal Man","Ape","Smith","Tay","Jay","Trillion","West","Dukes","Rap Up","Tape","Son","Planner","Habits","Z","Is Me","Gold","Silver","2.0","4000","Eternal","Dean","Malone","O Geezy","Mon","Grass","Roller","Barrel","Peez","IQ","Wordz","Gums","Sims","London","Place",]
-    
-    // Random numbers are made 
-    var randomNumber1 = parseInt(Math.random() * wordlist1.length);
-    var randomNumber2 = parseInt(Math.random() * wordlist2.length);
-    var name = wordlist1[randomNumber1] + " " + wordlist2[randomNumber2];			
-    return name
-    //alert(name); //Remove first to slashes to alert the name
-    
-    //If there's already a name it is removed  
-    // if(document.getElementById("result")){
-    //   document.getElementById("placeholder").removeChild(document.getElementById("result"));
-    // }
-    // // A div element is created to show the generated name. The Name is added as a textnode. Textnode is added to the placeholder.
-    // var element = document.createElement("div");
-    // element.setAttribute("id", "result");
-    // element.appendChild(document.createTextNode(name));
-    // document.getElementById("placeholder").appendChild(element);
-  }
-
   const joinGame = () => {
     // weAreLoaded()
     // Set new user name
@@ -142,15 +109,20 @@
   });
   
   // When receiving back from server
-  socket.on('setdrawer', (data) => {
+  socket.on('setdrawer response', (data) => {
     console.log('we be setting drawer')
 
     console.log('socket')
     console.log(socket)
     console.log('socket.id')
     console.log(socket.id)
+    console.log(data.word)
 
-    theWord = socket.word
+    // theWord = socket.word
+    setWord('server', data.word)
+
+    // // Set the theWord DOM
+    // theWordText.innerHTML = theWord
 
     onSetDrawerEvent(data)
   });
@@ -166,7 +138,6 @@
     onClickWordBoxEvent(data)
   });
   
-
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', (data) => {
     console.log('user joined')
@@ -352,6 +323,19 @@
     startButton.classList.add('hidden')
   }
 
+  function setWord(src, word) {
+    // let thisHereWord = word
+    theWord = word
+    // if (src === 'local') {
+    //   theWord = words[ random ]
+    // }
+    // else {
+    //   theWord = socket.word
+    // }
+    // Set the theWord DOM
+    theWordText.innerHTML = theWord
+  }
+
   // The start button is clicked
   function onStartButtonClick(e){
     
@@ -366,7 +350,7 @@
     // Set random wordbox
     random = Math.floor(Math.random() * words.length)
 
-    theWord = words[ random ]
+    setWord('local', words[ random ])
 
     // Set player and word locally
     arrangeForDrawer( {player: socket.id, random: random, word: words[ random ] } )
@@ -384,6 +368,17 @@
   function onClickWordBox(word) {
     console.log('the word is:')
     console.log(word)
+
+    // Did I guess correctly?
+    // Yes. 
+    // console.log(theWord)
+    // if () {
+      
+    // }
+    // // No 
+    // else {
+    //   blockMoreGuessing()
+    // }
 
     // *************************************************
     // **** emit event - sent from client to server ****
@@ -438,9 +433,16 @@
       // }, 500)
       // alert('correct guess')
     }
+    // else {
+    //   blockMoreGuessing()
+    // }
 
     // arrangeForDrawer(data, data.random)
     // currentDrawerId.innerHTML = data.player
+  }
+
+  const blockMoreGuessing = () => {
+    wordBoxWrapper.classList.add('block-more-guessing')
   }
 
   function arrangeForDrawer( {player, random, word}) {
@@ -580,6 +582,40 @@
        }
     }
     // return arr;
+  }
+
+  const makeid = (length) => {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
+  function rapNameGenerator(){
+    // Add your own words to the wordlist. Be careful to obey the showed syntax
+    
+    var wordlist1 = ["Easy","Big","Golden","Flexer","Myssis","Retardo","Poffin","Three Time","Holy","Big Man","Big Time","Lighter","Muscled","Everyday","Lil","Little","Toned","Dirty","Dusty","Clean","Fly","Gang","Game","The","Quick","Elementor","Guy","Machine Mouth","Two Tone","Rider","Vanilla","Chocolate","Coco","Marmalade","Viral","Slinger","Ten Toes","Scamazon","Your Dad","Digits","Post","Angry","Happy","Deadly","Talented","Positive","Army","Platinum","Scolder","Scholor","Ruthless","Phoner","Eager","Lawn","Every Cloud","Last Chance","Baby","Flower","Shower","Fast Tounge","Duke","Chewey","Gappy","Overflow","Louder","Sergeant","Mr","Royal","Pump","Shoveler","Hats Down","Forceful","Fly","Greezy","Bat Man","Show Time","Cash","Mulla","Counter","Aries","Taurus","Leo","Virgo","Libra","Evergreen","Audio","Certi","Certified","Gorilla","Park","Brudda","Brother","Key","Bearded","Fresh","Old","Old Man","P.O","Po","Dean","Street","More","Drive By",];
+    var wordlist2 = ["Q","Flex","Money","Baddie","E","Tone","R","Tinee","Ricardo","T","Grapes","Every Day","Dog","Pence","Cent","The Rapper","Dirty","The Stunter","Da Boss","Uzi","Flame","Time","Hustle","1","Thug","North","Brown","Green","2","G","Gee","Cream","East","3","Paper","Chains","Tumble","Roll","4","Thrones","Clapper","Mute","Bank","5","Dimes","On Da Corner","2 Gangster","6","Drinkz","Friday","Recruit","Pump","Rhymes","7","Cuz","Rider","Green","Fam","Gold","8","Light","Ice","Face","Black","Da Rapper","South","Man","9","Boy","Styles","Clips","Spray","Mr","Royal Man","Ape","Smith","Tay","Jay","Trillion","West","Dukes","Rap Up","Tape","Son","Planner","Habits","Z","Is Me","Gold","Silver","2.0","4000","Eternal","Dean","Malone","O Geezy","Mon","Grass","Roller","Barrel","Peez","IQ","Wordz","Gums","Sims","London","Place",]
+    
+    // Random numbers are made 
+    var randomNumber1 = parseInt(Math.random() * wordlist1.length);
+    var randomNumber2 = parseInt(Math.random() * wordlist2.length);
+    var name = wordlist1[randomNumber1] + " " + wordlist2[randomNumber2];			
+    return name
+    //alert(name); //Remove first to slashes to alert the name
+    
+    //If there's already a name it is removed  
+    // if(document.getElementById("result")){
+    //   document.getElementById("placeholder").removeChild(document.getElementById("result"));
+    // }
+    // // A div element is created to show the generated name. The Name is added as a textnode. Textnode is added to the placeholder.
+    // var element = document.createElement("div");
+    // element.setAttribute("id", "result");
+    // element.appendChild(document.createTextNode(name));
+    // document.getElementById("placeholder").appendChild(element);
   }
 
   // Now apply words
